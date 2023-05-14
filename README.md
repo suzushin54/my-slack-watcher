@@ -15,6 +15,6 @@
    - 
 2. `npm run build`
 3. `cdk deploy`
-  - (using `aws-cdk@1.92.0`)
+  - (using `aws-cdk@1.201.0`)
 
 

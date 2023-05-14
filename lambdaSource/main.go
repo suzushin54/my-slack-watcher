@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/url"
+	"os"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/labstack/gommon/log"
 	"github.com/nlopes/slack"
-	"net/http"
-	"net/url"
-	"os"
 )
 
 const (
@@ -114,9 +115,11 @@ func eventApiHandler(ctx context.Context, req events.APIGatewayProxyRequest) (ev
 	}
 
 	log.Infof("Type is %s", apiEvent.Event.Type)
+
 	switch apiEvent.Event.Type {
 	case ChannelCreatedEvent:
 		log.Info("ChannelCreatedEvent")
+
 		channelEvent := &ChannelEvent{}
 		for key, _ := range params {
 			err := json.Unmarshal([]byte(key), channelEvent)
@@ -129,6 +132,7 @@ func eventApiHandler(ctx context.Context, req events.APIGatewayProxyRequest) (ev
 		msg = fmt.Sprintf("New channel called #%s was created :tada:", channelEvent.SlackEvent.Channel.Name)
 	case EmojiChangedEvent:
 		log.Info("EmojiChangedEvent")
+
 		emojiEvent := &EmojiEvent{}
 		for key, _ := range params {
 			err := json.Unmarshal([]byte(key), emojiEvent)
