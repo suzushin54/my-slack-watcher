@@ -62,8 +62,8 @@ type EmojiEvent struct {
 	Challenge string `json:"challenge"`
 	Token     string `json:"token"`
 	Event     struct {
-		Type string `json:"type"`
-		Name string `json:"name"`
+		SubType string `json:"type"`
+		Name    string `json:"name"`
 	}
 }
 
@@ -142,8 +142,16 @@ func eventApiHandler(ctx context.Context, req events.APIGatewayProxyRequest) (ev
 			}
 		}
 
-		msg = fmt.Sprintf("Found a new Emoji, `:%s:` :%s:", emojiEvent.Event.Name, emojiEvent.Event.Name)
-
+		switch emojiEvent.Event.SubType {
+		case "add":
+			msg = fmt.Sprintf("A new emoji, `:%s:` :%s:, has been added!", emojiEvent.Event.Name, emojiEvent.Event.Name)
+		case "remove":
+			msg = fmt.Sprintf("The emoji `:%s:` :%s: has been removed.", emojiEvent.Event.Name, emojiEvent.Event.Name)
+		case "rename":
+			msg = fmt.Sprintf("The emoji `:%s:` :%s: has been renamed.", emojiEvent.Event.Name, emojiEvent.Event.Name)
+		default:
+			log.Info("Unknown subtype")
+		}
 	default:
 		log.Info("default")
 
